@@ -1,5 +1,7 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
+import fs from "fs";
+import path from "path";
 import { sequelize } from "./config/db";
 import uploadRoutes from "./routes/uploadRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -11,6 +13,17 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
+// Define the upload directory
+const uploadDir = path.join(__dirname, "../monnn");
+
+// Ensure the upload directory exists at startup
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true }); // Create directory if it doesn't exist
+  console.log(`Created missing upload directory at: ${uploadDir}`);
+} else {
+  console.log(`Upload directory exists at: ${uploadDir}`);
+}
+
 // Database synchronization
 (async () => {
   try {
@@ -21,12 +34,16 @@ app.use(express.json());
   }
 })();
 
+console.log("Static files served from:", path.resolve(__dirname, "../uploads"));
 // Routes
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api", userRoutes);
 app.use("/api", uploadRoutes);
+// Serve static files from the 'uploads' directory
+// app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
 // Server setup
 const PORT = process.env.PORT || 5000;

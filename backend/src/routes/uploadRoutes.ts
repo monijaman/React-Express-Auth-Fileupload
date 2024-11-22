@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import { uploadFile } from "../controllers/fileController"; // Controller method
+import { getAllFiles, uploadFile } from "../controllers/fileController"; // Controller method
 import authenticate from "../middlewares/authenticate"; // Authentication middleware
 import upload from "../utils/uploadConfig"; // Multer configuration
 
@@ -20,5 +20,8 @@ router.post(
     }
   }
 );
+
+// Route to get all files with pagination
+router.get("/files", authenticate, getAllFiles);
 
 export default router;

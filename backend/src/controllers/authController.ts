@@ -10,9 +10,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const user = await User.create({ email, password: hashedPassword });
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred.";
+
     res
       .status(400)
-      .json({ error: "Registration failed", details: error.message });
+      .json({ error: "Registration failed", details: errorMessage });
   }
 };
 
@@ -36,6 +39,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     });
     res.status(200).json({ token });
   } catch (error) {
-    res.status(400).json({ error: "Login failed", details: error.message });
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred.";
+    res.status(400).json({ error: "Login failed", details: errorMessage });
   }
 };

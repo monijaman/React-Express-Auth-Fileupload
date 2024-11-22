@@ -1,9 +1,11 @@
+import fs from "fs";
 import multer from "multer";
 import path from "path";
-import fs from "fs";
 
 // Ensure the upload directory exists
-const uploadDir = path.join(__dirname, "uploads");
+// Define the directory where uploaded files will be stored
+const uploadDir = path.join(__dirname, "../../uploads");
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
@@ -21,7 +23,11 @@ const storage = multer.diskStorage({
 });
 
 // Filter to only allow certain file types (e.g., images)
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (
+  req: any,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
   const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
   if (!allowedTypes.includes(file.mimetype)) {
     return cb(new Error("File type not allowed"));
