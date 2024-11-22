@@ -2,7 +2,7 @@ export interface User {
     id: string;
     email: string;
     fullName: string;
-    token: string;
+    token?: string;
   }
   
   export interface ApiResponse {
@@ -13,3 +13,5 @@ export interface User {
     error?: string;
   }
   
+ 
+ 

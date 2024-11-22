@@ -34,7 +34,7 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
   }, [token]);
 
   const fetchUser = async (token: string) => {
-    const response = await fetch("http://localhost:5000/api/auth/me", {
+    const response = await fetch("http://localhost:5000/api/user", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
 
   const register = async (email: string, fullName: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

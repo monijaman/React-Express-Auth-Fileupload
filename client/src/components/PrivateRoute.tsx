@@ -6,7 +6,7 @@ interface PrivateRouteProps {
   children: React.ReactNode;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+const PrivateRoute = ({ children }:PrivateRouteProps) => {
   const { user } = useAuth(); // Assuming user is fetched from AuthContext
 
   if (!user) {
