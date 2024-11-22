@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import { User } from "../models/userModel";
 import generateToken from "../utils/generateToken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+const secretKey = process.env.JWT_SECRET_KEY;
 
 // @Desc Get all users
 // @Route /api/auth
@@ -31,6 +33,67 @@ export const getAll = asyncHandler(async (req: Request, res: Response) => {
     });
   }
 });
+
+export const getUser = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      // Get the token from the Authorization header
+      const token = req.headers.authorization?.split(" ")[1];
+
+      if (!token) {
+        res.status(401).json({
+          success: false,
+          message: "No token provided.",
+        });
+        return;
+      }
+
+      if (secretKey) {
+
+        // Verify and decode the token
+        // Decode the token
+        const decoded = jwt.verify(token, secretKey) as JwtPayload;
+
+
+        // Extract user ID from the token
+        if (!decoded || !decoded.id) {
+          res.status(401).json({
+            success: false,
+            message: "Invalid token.",
+          });
+          return;
+        }
+
+        // Fetch the user by ID from the decoded token
+        const user = await User.findByPk(decoded.id, {
+          attributes: { exclude: ["password"] }, // Exclude sensitive fields
+        });
+
+        if (!user) {
+          res.status(404).json({
+            success: false,
+            message: "User not found.",
+          });
+          return;
+        }
+
+        // Send the user details as a response
+        res.status(200).json({
+          success: true,
+          user,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred.";
+      res.status(500).json({
+        success: false,
+        message: "Error fetching user by token.",
+        error: errorMessage,
+      });
+    }
+  }
+);
 
 export const createUser = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
