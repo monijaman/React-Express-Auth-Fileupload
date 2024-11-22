@@ -8,18 +8,16 @@ const router = express.Router();
 // Protect the route with authentication middleware and upload a single file
 router.post(
   "/upload",
-  authenticate,
-  upload.single("file"),
+  authenticate, // Authentication middleware
+  upload.single("file"), // Multer file upload middleware
   (req: Request, res: Response, next: NextFunction) => {
-    // Custom error handling for upload.single
-    upload.single("file")(req, res, (err: any) => {
-      if (err) {
-        // Handle the error if there is one
-        return next(err); // Pass the error to the next middleware (error handler)
-      }
+    if (req.file) {
       // Proceed to the uploadFile controller after successful file upload
-      uploadFile(req, res); // Call with only req and res
-    });
+      uploadFile(req, res);
+    } else {
+      // If no file is uploaded, return an error
+      res.status(400).json({ message: "No file uploaded" });
+    }
   }
 );
 
