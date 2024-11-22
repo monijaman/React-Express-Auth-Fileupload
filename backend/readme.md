@@ -56,3 +56,6 @@ npx sequelize-cli db:migrate
 
 npm install bcryptjs
 npm install --save-dev @types/bcryptjs
+
+for multer
+npm install --save-dev @types/express @types/multer

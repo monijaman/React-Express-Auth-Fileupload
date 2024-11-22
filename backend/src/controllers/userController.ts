@@ -56,7 +56,7 @@ export const createUser = asyncHandler(
 );
 
 // @Desc Login
-// @Route /api/auth/
+// @Route /api/login/
 // @Method POST
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -75,12 +75,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const isPasswordValid = await user.comparePassword(password);
 
-  console.log("Raw Password Input:", password);
-  console.log("Hashed Password Stored:", user.password);
-
-  // Compare passwords
-  console.log("Password Match Result:", isPasswordValid);
-
   if (isPasswordValid) {
     res.status(201).json({
       success: true,
@@ -97,7 +91,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // @Desc Register
-// @Route /api/auth/register
+// @Route /api/register
 // @Method POST
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -107,10 +101,6 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     res.status(400).json({ message: "Missing required fields" });
     return;
   }
-
-  // const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with salt
-  // console.log("Plain Password:", password);
-  // console.log("Hashed Password:", hashedPassword);
 
   try {
     const user = await User.create({

@@ -1,5 +1,6 @@
 import express from "express";
 import { sequelize } from "./config/db";
+import uploadRoutes from "./routes/uploadRoutes";
 import userRoutes from "./routes/userRoutes";
 
 (async () => {
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 // Use the user routes
 app.use("/api", userRoutes);
+app.use("/api", uploadRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
