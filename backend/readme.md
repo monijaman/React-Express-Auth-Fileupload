@@ -59,3 +59,8 @@ npm install --save-dev @types/bcryptjs
 
 for multer
 npm install --save-dev @types/express @types/multer
+
+
+## Typescript Debugging
+
+npx tsc --traceResolution
