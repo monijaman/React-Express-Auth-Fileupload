@@ -3,8 +3,8 @@ import { useAuth } from "../Context/AuthContext";
 
 const Login = () => {
   const { login, error } = useAuth();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("monir4@example.com");
+  const [password, setPassword] = useState<string>("monir");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
