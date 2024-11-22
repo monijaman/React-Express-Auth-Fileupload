@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { User } from "../models/userModel";
@@ -67,29 +66,29 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     where: { email }, // Correct Sequelize syntax
   });
 
-  console.log("user", user);
+  // console.log("user", user);
 
   if (!user) {
     res.status(401).json({ message: "User not found" });
     return;
   }
 
-  const isPasswordCorrect = await bcrypt.compare(password, user.password); // Compare the passwords
+  const isPasswordValid = await user.comparePassword(password);
 
-  console.log("Provided Password for Login:", password);
-  console.log("Stored Hash (Login):", user.password);
+  console.log("Raw Password Input:", password);
+  console.log("Hashed Password Stored:", user.password);
 
   // Compare passwords
-  console.log("Password Match Result:", isPasswordCorrect);
+  console.log("Password Match Result:", isPasswordValid);
 
-  if (isPasswordCorrect) {
+  if (isPasswordValid) {
     res.status(201).json({
       success: true,
       user: {
         id: user.id,
         email: user.email,
         fullName: user.fullName,
-        token: generateToken(user.id.toString()),
+        token: generateToken(user.id.toString()), // Generate JWT
       },
     });
   } else {
@@ -109,15 +108,15 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with salt
-  console.log("Plain Password:", password);
-  console.log("Hashed Password:", hashedPassword);
+  // const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with salt
+  // console.log("Plain Password:", password);
+  // console.log("Hashed Password:", hashedPassword);
 
   try {
     const user = await User.create({
       email,
       fullName,
-      password: hashedPassword, // Store the hashed password
+      password: password, // Store the hashed password
     });
 
     res.status(201).json({

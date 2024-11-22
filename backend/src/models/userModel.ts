@@ -47,10 +47,11 @@ User.init(
   }
 );
 
-// Hash password before saving
-User.beforeCreate(async (user) => {
-  if (user.password) {
-    user.password = await bcrypt.hash(user.password, 10); // Hash the password before saving
+// Add a hook to hash the password before saving
+User.beforeSave(async (user) => {
+  if (user.password && user.changed("password")) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
   }
 });
 
