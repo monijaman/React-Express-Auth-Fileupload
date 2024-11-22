@@ -43,3 +43,16 @@ backend/
 ## Run the application
 
 npm run dev
+
+## new token add
+
+npx sequelize-cli migration:generate --name add-token-to-users
+
+# Migrate
+
+npx sequelize-cli db:migrate
+
+# Bcrypt for password verifications
+
+npm install bcryptjs
+npm install --save-dev @types/bcryptjs

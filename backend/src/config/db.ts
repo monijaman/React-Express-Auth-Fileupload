@@ -1,17 +1,7 @@
-import path from "path";
 import { Sequelize } from "sequelize";
 
 export const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: path.join(__dirname, "../../database.sqlite"),
+  storage: "./database.sqlite", // Ensure this file path is correct
+  logging: console.log, // Optional: Enable logging for debugging
 });
-
-export const connectDB = async (): Promise<void> => {
-  try {
-    await sequelize.authenticate();
-    console.log("SQLite Connected");
-  } catch (error) {
-    console.error("Database connection failed", error);
-    process.exit(1);
-  }
-};
