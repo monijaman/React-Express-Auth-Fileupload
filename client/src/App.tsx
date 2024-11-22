@@ -5,12 +5,15 @@ import { AuthProvider } from "./Context/AuthContext"; // AuthContext for user st
 import Register from "./Components/Register";
 import PrivateRoute from "./Components/PrivateRoute"; // Assuming @ alias is configured
  import Dashboard from "./Components/Dashboard";
+ import Home from "./Components/Home";
 const App = () => {
   return (
     <AuthProvider>
       <Router>
         <Routes>
           {/* Protect the dashboard route with PrivateRoute */}
+          <Route path="/" element={<Home />} />
+
           <Route
             path="/dashboard"
             element={
