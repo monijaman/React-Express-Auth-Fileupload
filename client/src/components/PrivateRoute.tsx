@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Navigate } from "react-router-dom"; // Updated imports for v6
-import { useAuth } from "@/context/AuthContext"; // Assuming @ alias is configured
+import { useAuth } from "../Context/AuthContext"; // Assuming @ alias is configured
 
 interface PrivateRouteProps {
   children: React.ReactNode;
