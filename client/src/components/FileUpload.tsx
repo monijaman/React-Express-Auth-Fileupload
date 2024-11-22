@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { BASE_URL } from '../utils/constants';
 
-const FileUpload = () => {
+interface FileUploadProps {
+    onFileUploaded: () => void; // Define the prop type
+}
+const FileUpload = ({ onFileUploaded }: FileUploadProps) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +22,7 @@ const FileUpload = () => {
         try {
             const token = localStorage.getItem("token"); // Retrieve token from localStorage
 
-            const response = await fetch("http://localhost:5000/api/upload", {
+            const response = await fetch(`${BASE_URL}/api/upload`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -29,9 +33,11 @@ const FileUpload = () => {
 
             const data = await response.json();
             if (data.success) {
-                alert("File uploaded successfully!");
+                onFileUploaded();  // Notify parent component that file is uploaded
+
+                console.log("File uploaded successfully!");
             } else {
-                alert("Upload failed: " + data.error);
+                console.log("Upload failed: " + data.error);
             }
         } catch (error) {
             console.error("Error uploading file:", error);
@@ -41,7 +47,7 @@ const FileUpload = () => {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
-            <h3 className="text-xl font-medium text-gray-700">Upload File</h3>
+            <h3 className="text-xl font-medium text-gray-700">Upload File (Image)</h3>
             <div className="mt-4">
                 <input
                     type="file"

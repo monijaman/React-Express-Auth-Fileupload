@@ -1,5 +1,8 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { ApiResponse, User } from "../types";
+import { BASE_URL } from '../utils/constants';
+
+
 // Define the AuthProviderProps to accept children as a ReactNode
 interface AuthProviderProps {
   children: ReactNode;
@@ -42,7 +45,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch("http://localhost:5000/api/getuser", {
+      const response = await fetch(`${BASE_URL}/api/getuser`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -70,7 +73,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(`${BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +97,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const register = async (email: string, fullName: string, password: string) => {
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
+      const response = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

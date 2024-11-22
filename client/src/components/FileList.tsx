@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BASE_URL } from '../utils/constants';
 
 interface FileData {
     id: number;
@@ -7,46 +8,51 @@ interface FileData {
     uploadedAt: string;
 }
 
-const FileList = () => {
+interface FileListProps {
+    fileUploaded: boolean;
+}
+
+const FileList = ({ fileUploaded }: FileListProps) => {
     const [files, setFiles] = useState<FileData[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState<number>(1); // Current page
     const [totalPages, setTotalPages] = useState<number>(1); // Total pages
 
-    useEffect(() => {
-        const fetchFiles = async () => {
-            try {
-                setLoading(true);
-                setError(null); // Reset error state
-                const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const fetchFiles = async () => {
+        try {
+            setLoading(true);
+            setError(null); // Reset error state
+            const token = localStorage.getItem("token"); // Retrieve token from localStorage
 
-                const response = await fetch(`http://localhost:5000/api/files?page=${page}`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-                        "Content-Type": "application/json",
-                    },
-                });
+            const response = await fetch(`${BASE_URL}/api/files?page=${page}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                    "Content-Type": "application/json",
+                },
+            });
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (response.ok && data.success) {
-                    setFiles(data.files); // Update files
-                    setTotalPages(data.totalPages); // Update total pages
-                } else {
-                    setError(data.message || "Failed to fetch files");
-                }
-            } catch (error) {
-                setError("An error occurred while fetching files.");
-                console.error(error);
-            } finally {
-                setLoading(false);
+            if (response.ok && data.success) {
+                setFiles(data.files); // Update files
+                setTotalPages(data.totalPages); // Update total pages
+            } else {
+                setError(data.message || "Failed to fetch files");
             }
-        };
+        } catch (error) {
+            setError("An error occurred while fetching files.");
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
 
         fetchFiles();
-    }, [page]); // Re-fetch files when page changes
+    }, [page, fileUploaded]); // Re-fetch files when page changes
 
     const handleNextPage = () => {
         if (page < totalPages) setPage((prev) => prev + 1);
@@ -64,9 +70,15 @@ const FileList = () => {
         return <p className="text-red-500">{error}</p>;
     }
 
+
+    if (loading) {
+        return <p>Loading files...</p>;
+    }
+
+
     return (
         <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
-            <h3 className="text-xl font-medium text-gray-700">Uploaded Files</h3>
+            <h3 className="text-xl font-medium text-gray-700">Uploaded Files  </h3>
             {files.length === 0 ? (
                 <p className="mt-4 text-gray-600">No files uploaded yet.</p>
             ) : (
@@ -84,7 +96,7 @@ const FileList = () => {
                             />
                             {/* File Info */}
                             <div className="mt-4 md:mt-0 md:ml-4 flex-1">
-                                <p className="text-gray-800 font-medium">{file.filePath}</p>
+                                <p className="text-gray-800 font-medium">{file.fileName}</p>
                                 <p className="text-gray-500 text-sm">
                                     Uploaded: {new Date(file.uploadedAt).toLocaleString()}
                                 </p>
