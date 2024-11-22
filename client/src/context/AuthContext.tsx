@@ -34,7 +34,7 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
   }, [token]);
 
   const fetchUser = async (token: string) => {
-    const response = await fetch("http://localhost:5000/api/user", {
+    const response = await fetch("http://localhost:5000/api/getuser", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
