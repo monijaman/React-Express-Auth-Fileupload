@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { User, ApiResponse } from "../types";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { ApiResponse, User } from "../types";
 // Define the AuthProviderProps to accept children as a ReactNode
 interface AuthProviderProps {
-    children: ReactNode;
-  }
+  children: ReactNode;
+}
 interface AuthContextProps {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
@@ -22,20 +22,23 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider  = ({ children }:AuthProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    console.log("Token in AuthProvider:", token); // Debug token initialization
-    if (token) {
-      fetchUser(token);
-    } else {
-      setUser(null); // Ensure user is cleared if no token
-    }
+    const initializeUser = async () => {
+      if (token) {
+        await fetchUser(token);
+      }
+      setLoading(false); // Set loading to false after initialization
+    };
+
+    initializeUser();
   }, [token]);
-  
+
 
   const fetchUser = async (token: string) => {
     try {
@@ -46,13 +49,14 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`API responded with status ${response.status}`);
       }
-  
+
       const data: ApiResponse = await response.json();
       if (data.success) {
+
         setUser(data.user || null);
       } else {
         setError(data.error || "Failed to fetch user");
@@ -120,7 +124,8 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, error }}>
-      {children}
+      {!loading ? children : <div>Loading...</div>} {/* Show loading indicator */}
+
     </AuthContext.Provider>
   );
 };
