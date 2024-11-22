@@ -8,7 +8,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute = ({ children }:PrivateRouteProps) => {
   const { user } = useAuth(); // Assuming user is fetched from AuthContext
-
+  console.log("User in PrivateRoute:", user);
   if (!user) {
     return <Navigate to="/login" replace />; // Redirect to login if not authenticated
   }

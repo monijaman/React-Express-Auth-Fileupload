@@ -28,29 +28,42 @@ export const AuthProvider  = ({ children }:AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
 
   useEffect(() => {
+    console.log("Token in AuthProvider:", token); // Debug token initialization
     if (token) {
       fetchUser(token);
+    } else {
+      setUser(null); // Ensure user is cleared if no token
     }
   }, [token]);
+  
 
   const fetchUser = async (token: string) => {
-
-    const response = await fetch("http://localhost:5000/api/getuser", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    console.log('tokentoken', response)
-
-
-    const data: ApiResponse = await response.json();
-    if (data.success) {
-      setUser(data.user || null);
+    try {
+      const response = await fetch("http://localhost:5000/api/getuser", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`API responded with status ${response.status}`);
+      }
+  
+      const data: ApiResponse = await response.json();
+      if (data.success) {
+        setUser(data.user || null);
+      } else {
+        setError(data.error || "Failed to fetch user");
+        setUser(null); // Explicitly set user to null on failure
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      setError("Network error");
+      setUser(null); // Handle errors gracefully
     }
   };
-
   const login = async (email: string, password: string) => {
     try {
       const response = await fetch("http://localhost:5000/api/login", {
