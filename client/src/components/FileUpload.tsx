@@ -41,7 +41,7 @@ const FileUpload = ({ onFileUploaded }: FileUploadProps) => {
             }
         } catch (error) {
             console.error("Error uploading file:", error);
-            alert("An error occurred during upload.");
+            // alert("An error occurred during upload.");
         }
     };
 
