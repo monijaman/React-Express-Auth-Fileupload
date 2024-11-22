@@ -60,3 +60,14 @@ module.exports = {
 @tailwind components;
 @tailwind utilities;
 ```
+
+4. Import CSS in React
+
+In src/index.js (or src/main.jsx):
+
+javascript
+Copy code
+
+```js
+import "./index.css";
+```

@@ -1,14 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useAuth } from "../Context/AuthContext";
 
 const Login = () => {
   const { login, error } = useAuth();
   const [email, setEmail] = useState<string>("monir4@example.com");
   const [password, setPassword] = useState<string>("monir");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await login(email, password);
+    // Redirect to the dashboard if login succeeds
+    if (!error) {
+      navigate("/dashboard"); // Replace "/dashboard" with your actual route
+    }
   };
 
   return (

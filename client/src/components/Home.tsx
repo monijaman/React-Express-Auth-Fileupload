@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -7,7 +6,7 @@ const Home = () => {
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm text-center">
         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Welcome to Our App!</h2>
         <p className="text-gray-600 mb-6">
-          Welcome to the app! Please choose an option to get started.
+          Welcome to the Hero! Please choose an option to get started.
         </p>
 
         <div className="space-y-4">
