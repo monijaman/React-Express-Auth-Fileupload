@@ -14,7 +14,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 // Define the upload directory
-const uploadDir = path.join(__dirname, "../monnn");
+const uploadDir = path.join(__dirname, "../uploads");
 
 // Ensure the upload directory exists at startup
 if (!fs.existsSync(uploadDir)) {

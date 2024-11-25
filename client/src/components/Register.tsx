@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Register: React.FC = () => {
   const { register, error } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  const handleSubmit = async (e: React.FormEvent) => {
+   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await register(email, fullName, password);
+    if(!error){
+      navigate("/login"); 
+    }
   };
 
   return (

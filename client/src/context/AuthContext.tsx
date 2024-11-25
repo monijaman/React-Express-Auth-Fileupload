@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const data: ApiResponse = await response.json();
       if (data.success) {
-
+        console.log('=+++==',data.user)
         setUser(data.user || null);
       } else {
         setError(data.error || "Failed to fetch user");
