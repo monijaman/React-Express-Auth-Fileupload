@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BASE_URL } from '../utils/constants';
+import Cookies from "js-cookie";
 
 interface FileUploadProps {
     onFileUploaded: () => void; // Define the prop type
@@ -20,7 +21,7 @@ const FileUpload = ({ onFileUploaded }: FileUploadProps) => {
         formData.append("file", selectedFile);
 
         try {
-            const token = localStorage.getItem("token"); // Retrieve token from localStorage
+            const token = Cookies.get('token'); // Retrieve token from localStorage
 
             const response = await fetch(`${BASE_URL}/api/upload`, {
                 method: "POST",

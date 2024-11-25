@@ -5,7 +5,8 @@ import path from "path";
 import { sequelize } from "./config/db";
 import uploadRoutes from "./routes/uploadRoutes";
 import userRoutes from "./routes/userRoutes";
-
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes'; // Import auth routes
 // Initialize the app
 const app = express();
 
@@ -42,6 +43,8 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api", userRoutes);
 app.use("/api", uploadRoutes);
+app.use('/api', authRoutes); // Mount the routes under /api prefix
+
 // Serve static files from the 'uploads' directory
 // app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 

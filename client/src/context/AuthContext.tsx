@@ -1,7 +1,13 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ApiResponse, User } from "../types";
-import { BASE_URL } from '../utils/constants';
-
+import { BASE_URL } from "../utils/constants";
+import Cookies from "js-cookie";
 
 // Define the AuthProviderProps to accept children as a ReactNode
 interface AuthProviderProps {
@@ -10,7 +16,11 @@ interface AuthProviderProps {
 interface AuthContextProps {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, fullName: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    fullName: string,
+    password: string
+  ) => Promise<void>;
   logout: () => void;
   error: string | null;
 }
@@ -28,7 +38,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(() => Cookies.get('token') || null);
+
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
@@ -41,7 +52,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     initializeUser();
   }, [token]);
-
 
   const fetchUser = async (token: string) => {
     try {
@@ -59,7 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const data: ApiResponse = await response.json();
       if (data.success) {
-        console.log('=+++==',data.user)
+        console.log("=+++==", data.user);
         setUser(data.user || null);
       } else {
         setError(data.error || "Failed to fetch user");
@@ -86,7 +96,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (data.success) {
         setUser(data.user || null);
         setToken(data.user?.token || null);
-        localStorage.setItem("token", data.user?.token || "");
+        // localStorage.setItem("token", data.user?.token || "");
+
+        Cookies.set("token", data.user?.token || "", {
+          expires: 7,       // Expiration in days
+          secure: true,     // Use secure cookies
+          sameSite: "strict" // Protect against CSRF
+      });
+      
       } else {
         setError(data.error || "Login failed");
       }
@@ -95,7 +112,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async (email: string, fullName: string, password: string) => {
+  const register = async (
+    email: string,
+    fullName: string,
+    password: string
+  ) => {
     try {
       const response = await fetch(`${BASE_URL}/api/register`, {
         method: "POST",
@@ -109,8 +130,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (data.success) {
         setUser(data.user || null);
-        setToken(data.user?.token || null);
-        localStorage.setItem("token", data.user?.token || "");
+        // setToken(data.user?.token || null);
+        // localStorage.setItem("token", data.user?.token || "");
       } else {
         setError(data.error || "Registration failed");
       }
@@ -122,13 +143,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
+    Cookies.remove('token');
+
   };
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, error }}>
-      {!loading ? children : <div>Loading...</div>} {/* Show loading indicator */}
-
+      {!loading ? children : <div>Loading...</div>}{" "}
+      {/* Show loading indicator */}
     </AuthContext.Provider>
   );
 };

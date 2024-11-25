@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BASE_URL } from '../utils/constants';
+import Cookies from "js-cookie";
 
 interface FileData {
     id: number;
@@ -23,7 +24,7 @@ const FileList = ({ fileUploaded }: FileListProps) => {
         try {
             setLoading(true);
             setError(null); // Reset error state
-            const token = localStorage.getItem("token"); // Retrieve token from localStorage
+            const token =  Cookies.get('token'); // Retrieve token from localStorage
 
             const response = await fetch(`${BASE_URL}/api/files?page=${page}`, {
                 method: "GET",
