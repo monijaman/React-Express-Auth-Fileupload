@@ -1,0 +1,34 @@
+/* Centering container */
+.loader-container {
+    position: fixed; /* Ensures it covers the entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional semi-transparent background */
+    z-index: 9999; /* Ensures it's above other elements */
+  }
+  
+  /* Loader animation */
+  .loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ccc; /* Outer border */
+    border-top: 5px solid #007bff; /* Animated border color */
+    border-radius: 50%; /* Makes it circular */
+    animation: spin 1s linear infinite; /* Smooth spinning animation */
+  }
+  
+  /* Spinning animation */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

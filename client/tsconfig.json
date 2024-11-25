@@ -3,7 +3,7 @@
     "target": "es5",
     "baseUrl": "src", // This tells TypeScript to treat `src` as the root folder for module resolution
     "paths": {
-      "@/*": ["./*"] // This will create an alias `@` that points to the `src` folder
+      "@/*": ["*"]  // This will create an alias `@` that points to the `src` folder
     },
     "lib": [
       "dom",
